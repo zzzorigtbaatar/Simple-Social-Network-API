@@ -107,17 +107,16 @@ module.exports = {
   // Remove friend from a user
   removeFriend(req, res) {
     User.findOneAndUpdate(
-      { _id: req.params.userId },
-      { $pull: { friend: { friendId: req.params.friendId } } },
-      { runValidators: true, new: true }
+      {_id: req.params.userId},
+      {$pull: { friends: req.params.friendId }},
+      {new: true},
+      (err, result) => {
+        if (result) {
+          res.status(200).json(result);
+        } else {
+          res.status(500).json({ message: 'Failed to delete friend!' });
+        }
+      }
     )
-      .then((user) =>
-        !user
-          ? res
-              .status(404)
-              .json({ message: 'No user found with that ID :(' })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
   },
 };
