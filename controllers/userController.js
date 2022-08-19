@@ -6,17 +6,6 @@ const headCount = async () =>
     .count('userCount')
     .then((numberOfUsers) => numberOfUsers);
 
-// // Aggregate function for getting the overall grade using $avg
-// const grade = async (userId) =>
-//   User.aggregate([
-//     {
-//       $unwind: '$thoughts',
-//     },
-//     {
-//       $group: { _id: userId, overallGrade: { $avg: '$thoughts.score' } },
-//     },
-//   ]);
-
 module.exports = {
   // Get all users
   getUsers(req, res) {
@@ -81,13 +70,13 @@ module.exports = {
       });
   },
 
-  // Add an thought to a user
-  addThought(req, res) {
-    console.log('You are adding an thought');
+  // Add an friend to a user
+  addFriend(req, res) {
+    console.log('You are adding an friend');
     console.log(req.body);
     User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $addToSet: { thoughts: req.body } },
+      { $addToSet: { friends: req.body } },
       { runValidators: true, new: true }
     )
       .then((user) =>
@@ -99,11 +88,11 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Remove thought from a user
-  removeThought(req, res) {
+  // Remove friend from a user
+  removeFriend(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $pull: { thought: { thoughtId: req.params.thoughtId } } },
+      { $pull: { friend: { friendId: req.params.friendId } } },
       { runValidators: true, new: true }
     )
       .then((user) =>
