@@ -12,10 +12,11 @@ const userSchema = new Schema({
     required: true,
     unique: true,
     validate: {
-      validator: validator.isEmail,
-      message: `${VALUE} is not a valid email`,
-      isAsync: false,
-    },
+      validator: function(v) {
+        return /^([a-z0-9\+_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,100})$/.test(v);
+      },
+      message: props => `${props.value} is not a valid email!`
+    }
   },
   thoughts: [
     {
