@@ -1,4 +1,4 @@
-const { User, Course } = require('../models');
+const { User, Thought } = require('../models');
 
 // Aggregate function to get the number of users overall
 const headCount = async () =>
@@ -61,22 +61,22 @@ module.exports = {
         res.status(500).json(err);
       });
   },
-  // Delete a user and remove them from the course
+  // Delete a user and remove them from the thought
   deleteUser(req, res) {
     User.findOneAndRemove({ _id: req.params.userId })
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No such user exists' })
-          : Course.findOneAndUpdate(
+          : Thought.findOneAndUpdate(
               { users: req.params.userId },
               { $pull: { users: req.params.userId } },
               { new: true }
             )
       )
-      .then((course) =>
-        !course
+      .then((thought) =>
+        !thought
           ? res.status(404).json({
-              message: 'User deleted, but no courses found',
+              message: 'User deleted, but no thoughts found',
             })
           : res.json({ message: 'User successfully deleted' })
       )
